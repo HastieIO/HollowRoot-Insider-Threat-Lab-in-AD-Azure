@@ -1,75 +1,113 @@
 # HollowRoot – Full-Stack Enterprise Security Lab
 
-HollowRoot is a full-stack cybersecurity simulation project designed to showcase realistic insider threat paths across both **Active Directory (AD)** and **Azure cloud infrastructure**.
+HollowRoot is a full-stack cybersecurity lab that simulates what happens when a company builds fast, configures badly, and underestimates the risks of insider threats.
 
-This lab environment is built to feel like something you’d actually see in a fast-growing fintech company — messy permissions, rushed cloud rollout, reused credentials, and too much trust in too many places.
+It’s built to mimic a realistic fintech company — **Blackridge Bank** — with an internal Active Directory environment, a cloud-connected Azure tenant, and all the messy identity and access problems that real organizations often overlook.
+
+This isn’t just a red team lab. It’s the whole picture:
+- **Blue team setup**
+- **Red team abuse**
+- **Post-breach analysis**
+- **Hardening + remediation**
 
 ---
 
 ## 🧠 Project Goal
 
-The goal of HollowRoot is to **simulate how a rogue insider can move from intern-level access to full domain and cloud compromise**, using real-world misconfigurations and security oversights.
+To simulate how a trusted insider — starting with basic intern access — can escalate privileges, compromise sensitive systems, and eventually breach the cloud, all because no one locked things down.
 
-It’s designed to cover both **red team escalation paths** and **blue team detection failures**, making it ideal for learning, documentation, or resume-worthy demos.
-
----
-
-## 🗂️ What This Project Covers
-
-- Structured Active Directory environment (`blackridge.local`) with users, departments, RBAC, and NTFS-secured shared folders
-- Realistic group structures using role-based access control (RBAC)
-- Automated PowerShell scripts for user + group deployment
-- Windows 10 client setup for internal access simulation
-- RDP + file share scenarios
-- Azure tenant setup mimicking a hybrid org:
-  - Bad identity hygiene
-  - Key Vault exposure
-  - Public blob storage leaks
-  - Credential hardcoding
-- Credential leak on-prem (`.ps1`) used to pivot into Azure
-- Red team escalation design baked into the misconfigs
+And then, to flip the script:  
+**How do we defend against it? What could’ve stopped it?**
 
 ---
 
-## 📖 Story: “The Intern Who Got Tired of Waiting”
+## 🧩 Project Structure
 
-_Eliot Drake_ was a quiet, hard-working IT intern at Blackridge Bank.
+### Phase 1 – Foundation & Infrastructure
 
-He clocked in early, stayed late, and did everything he was told. For a while, he thought it might pay off — maybe even land him a full-time spot. But one afternoon, he overheard his manager during a Teams call:
+- Deployed an **Active Directory environment (`blackridge.local`)**
+  - Structured by site and department
+  - Users, security groups, and mapped shared drives
+- Wrote PowerShell automation to generate:
+  - 100 users
+  - Department-based OU + group assignments
+  - Human-style passwords
+- Locked down folders with NTFS + group permissions
+- Shared folders via SMB
+- Deployed a Windows 10 client to test permissions and simulate user actions
 
-> “We’ll probably just cut him loose. He hasn’t shown any real initiative.”
+### Phase 2 – Insider Attack (Red Team)
 
-Something snapped.
+- Introduced **Eliot**, a quiet IT intern with too much access
+- Discovered overprivileged execs, reused credentials, and unsecured shares
+- Found a `.ps1` script with **hardcoded Azure credentials**
+- Pivoted from domain to Azure using built-in tools (no malware)
+- Extracted secrets from **Azure Key Vault**
+- Downloaded financials from **public blob storage**
+- Planted a logic bomb for cleanup
 
-Over the next few weeks, Eliot stopped trying to impress and started exploring. He noticed that executives had domain admin rights. That PowerShell scripts had saved credentials in plain text. That cloud access was wide open — and no one was watching.
+### Phase 3 – Blue Team Response
 
-He didn’t have to break in.  
-He was already inside.
+After the breach, we wrote a **remediation plan** based on real-world blue team practices:
+- How GPOs could’ve prevented lateral movement
+- How conditional access and MFA would’ve stopped the cloud pivot
+- How logging and alerts could’ve revealed Eliot’s activity early
+- How to fix overprivileged groups, clean up stale identities, and secure cloud storage properly
 
 ---
 
-## 🔍 Why This Project Exists
+## 📖 Short Story: “The Intern Who Got Tired of Waiting”
 
-I built this to learn what companies actually do wrong, not just what textbooks say.
+_Eliot Drake_ was the type of intern most teams want — early, eager, and quiet.
 
-HollowRoot is meant to feel real — full of corner-cutting, shadow admins, forgotten shares, and policies that "someone meant to fix." The kind of environment where compromise doesn't happen because of zero-days, but because no one ever cleaned up after themselves.
+But after overhearing his manager talk about letting him go, he decided to stop waiting for a shot and start making moves.
+
+He found credentials in shared folders. Noticed that some execs had domain admin. Saw that cloud access wasn’t being monitored.
+
+He didn’t break in.  
+He just kept going.
 
 ---
 
+## 🧪 Why This Lab Exists
 
-## 🛠️ Tools Used
+I didn’t want to just build something “secure.”  
+I wanted to build something that looked normal — and was quietly dangerous.
 
-- Windows Server 2022
-- Windows 10 (client)
-- Proxmox (for virtualization)
-- Azure Portal (free tier)
-- PowerShell
-- Microsoft Entra ID (formerly Azure AD)
+HollowRoot is the kind of place where:
+- MFA was “on the roadmap”
+- Scripts with passwords were left on the share drive
+- Domain Admins didn’t remember who was in what group
+- Cloud was rushed and no one went back to fix it
+
+This project is about understanding how attacks happen — and what can be done after.
+
+---
+
+## 🛠️ Stack
+
+- Windows Server 2022 (AD, file shares, group policies)
+- Windows 10 (domain-joined client)
+- PowerShell (automation + internal abuse)
+- Azure (IAM, Storage, Key Vault, Entra ID)
+- Proxmox (virtualization for lab)
+
+---
+
+## 🧾 Deliverables
+
+- `Deploy-BlackridgeAD.ps1` – user + group automation
+- `Phase_1_Notes.md` – clean walkthrough of AD + Azure setup
+- `Phase_2_RedTeam.md` – Eliot’s attack chain
+- `Phase_3_BlueTeamRemediation.md` – hardening recommendations
+- `Phase_1_Report.pdf` – polished summary for portfolio use
 
 ---
 
 ## 📬 Contact / Follow-Up
 
-This project is a work-in-progress designed for learning and portfolio building.  
-If you're curious or want to build something similar, feel free to reach out or follow along.
+This lab is ongoing — future phases will expand into logging, SIEM alerts, lateral detection, and more.
 
+If you’re building something similar or want to fork and expand on HollowRoot, feel free to reach out or contribute.
+
+Let’s build bad infrastructure, so we can get better at defending it.
